@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -23,14 +24,10 @@ const Import: React.FC = () => {
   const history = useHistory();
 
   async function handleUpload(): Promise<void> {
-    // const data = new FormData();
-
-    // TODO
-
     try {
-      // await api.post('/transactions/import', data);
+      await api.post('/transactions/import', uploadedFiles);
     } catch (err) {
-      // console.log(err.response.error);
+      console.log(err.response);
     }
   }
 
@@ -40,7 +37,7 @@ const Import: React.FC = () => {
 
   return (
     <>
-      <Header size="small" />
+      <Header size="small" pageGo="/" />
       <Container>
         <Title>Importar uma transação</Title>
         <ImportFileContainer>
