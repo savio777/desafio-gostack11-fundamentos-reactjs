@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import filesize from 'filesize';
 
@@ -14,25 +13,41 @@ import alert from '../../assets/alert.svg';
 import api from '../../services/api';
 
 interface FileProps {
-  file: File;
+  file: File | string;
   name: string;
   readableSize: string;
 }
 
 const Import: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
-  const history = useHistory();
 
   async function handleUpload(): Promise<void> {
     try {
-      await api.post('/transactions/import', uploadedFiles);
+      const file = new FormData();
+
+      uploadedFiles.map(f => {
+        file.append('file', f.file, 'file.csv');
+      });
+
+      await api.post('/transactions/import', file);
     } catch (err) {
+      console.log(err);
       console.log(err.response);
     }
   }
 
   function submitFile(files: File[]): void {
-    // TODO
+    const filesForUpload: FileProps[] = [];
+
+    files.map(f => {
+      filesForUpload.push({
+        file: f,
+        name: f.name,
+        readableSize: filesize(f.size),
+      });
+    });
+
+    setUploadedFiles(filesForUpload);
   }
 
   return (
@@ -50,7 +65,7 @@ const Import: React.FC = () => {
               Permitido apenas arquivos CSV
             </p>
             <button onClick={handleUpload} type="button">
-              Enviar
+              Importar
             </button>
           </Footer>
         </ImportFileContainer>

@@ -91,11 +91,11 @@ const Dashboard: React.FC = () => {
             <tbody>
               {transactions.map(t => (
                 <tr key={t.id}>
-                  <td className="title">Computer</td>
+                  <td className="title">{t.title}</td>
                   <td className={t.type}>
                     {t.type === 'income'
-                      ? `R$ ${formatValue(t.value)}`
-                      : `- R$ ${formatValue(t.value)}`}
+                      ? ` ${formatValue(t.value)}`
+                      : `-  ${formatValue(t.value)}`}
                   </td>
                   <td>{t.category.title}</td>
                   <td>{t.created_at}</td>
